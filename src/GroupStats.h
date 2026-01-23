@@ -48,7 +48,7 @@ auto groupStats(T* arr,size_t n,KeyFunc keyFunc, ValueFunc valueFunc)
         ValueType value = valueFunc(elem);
 
         // ищем группу с таки ключом
-        auto it = groups.find(key);
+        auto it = groupsMap.find(key);
 
         if (it == groupsMap.end()) {
             // если нет соответствующей группы
@@ -65,7 +65,7 @@ auto groupStats(T* arr,size_t n,KeyFunc keyFunc, ValueFunc valueFunc)
             // уже есть, обновляем существующую
             GroupData& group = it->second;
 
-            group.cont++;
+            group.count++;
             if (elem < group.minElem) group.minElem = elem;
             if (elem > group.maxElem) group.maxElem = elem;
             group.sum = group.sum + value;
@@ -75,9 +75,9 @@ auto groupStats(T* arr,size_t n,KeyFunc keyFunc, ValueFunc valueFunc)
 
     // преобразуем map в vector для вывода
     std::vector<GroupInfo<T, KeyType, ValueType>> result;
-    result.reserve(groupMap.size());
+    result.reserve(groupsMap.size());
 
-    for (const auto& pair : GroupMap) {
+    for (const auto& pair : groupsMap) {
         const KeyType& key = pair.first;
         const GroupData& data = pair.second;
 
