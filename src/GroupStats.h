@@ -1,11 +1,16 @@
 #ifndef GroupStats_h
 #define GroupStats_h
 
+#include <iostream>
+#include <map>
 #include <vector>
+#include <string>
+#include <type_traits> //для std::decay_t (очищения типа от ссылок)
+#include <iomanip> //для форматированного вывода
 
 // структура GroupInfo
 template <typename ElemType, typename KeyType, typename ValueType>
-struct GrouInfo
+struct GroupInfo
 {
     KeyType key;
     size_t count;
@@ -84,6 +89,18 @@ auto groupStats(T* arr,size_t n,KeyFunc keyFunc, ValueFunc valueFunc)
     }
 
     return result;
+};
+
+
+template <typename ElemType, typename KeyType, typename ValueType>
+void printGroupInfo(const GroupInfo<ElemType, KeyType, ValueType>& info) {
+    std::cout << "Key: " << std::setw(5) << info.key
+              << " | Count: " << std::setw(3) << info.count
+              << " | Min: " << std::setw(8) << info.minElem
+              << " | Max: " << std::setw(8) << info.maxElem
+              << " | Sum: " << std::setw(10) << info.sum
+              << " | Avg: " << std::setw(10) << std::fixed << std::setprecision << info.avg;
+    std::cout << std::endl;
 };
 
 #endif // GroupStats_h
