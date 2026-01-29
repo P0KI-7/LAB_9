@@ -99,7 +99,7 @@ void printGroupInfo(const GroupInfo<ElemType, KeyType, ValueType>& info) {
               << " | Min: " << std::setw(8) << info.minElem
               << " | Max: " << std::setw(8) << info.maxElem
               << " | Sum: " << std::setw(10) << info.sum
-              << " | Avg: " << std::setw(10) << std::fixed << std::setprecision << info.avg;
+              << " | Avg: " << std::setw(10) << std::fixed << std::setprecision(2) << info.avg;
     std::cout << std::endl;
 };
 
