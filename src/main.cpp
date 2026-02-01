@@ -7,24 +7,74 @@ auto intValueFunc = [] (int x) { return x; };
 auto doubleKeyFunc = [] (double x) {
     if (x < 0) return 0;
     if (0 <= x && x <= 10) return 1;
-    if (x > 10) return 2;
+    return 2;
 };
 auto doubleValueFunc = [] (double x) { return x; };
 
 auto stringKeyFunc = [] (const std::string& x) { return x[0]; };
 auto stringValueFunc = [] (const std::string& x) { return x.length(); };
 
+// функтор с параметром вместо intKeyFunc, в котором можно выбирать,
+// по каком разрзяду сортировать
+// функтор отличается от обычного объяекта перегрузкой скобочек
+class reIntKeyFunc {
+    int rank = 1;
+public:
+    reIntKeyFunc(): rank(1) {}
+    reIntKeyFunc(int rank): rank(rank) {}
+    int operator()(int x) const { 
+        for (int i = 1; i < rank; ++i) x /= 10;
+        return x % 10;
+    };
+};
 
+// мой новый объект (бренды связанные с фруктами), включающие имя фрукта и год основания бренда
+// важно перегрузить "<" и ">" которые используется в шаблонной функции
+// также надо перегрузить выввод для нашего объекта
+struct Fruict_brands{
+    std::string name;
+    int yoo; // year of opening (год открытия)
+
+    Fruict_brands(): name(""), yoo(0) {}
+    Fruict_brands(std::string name, int yoo): name(name), yoo(yoo) {}
+
+    bool operator<(const Fruict_brands& other) const {
+        return yoo < other.yoo;
+    }
+    bool operator>(const Fruict_brands& other) const {
+        return yoo > other.yoo;
+    }
+
+};
+
+std::ostream& operator<<(std::ostream& o, const Fruict_brands& f) {
+    return o << f.name << ". Year of opening: " << std::setw(4) << f.yoo << ".";
+}
+
+// специальные лябда функции для передачи в шаблонную функцию
+auto fruictKeyFunc = [] (const Fruict_brands& x) { return x.name[0]; };
+auto fruictValueFunc = [] (const Fruict_brands& x) { return x.yoo; };
 
 
 int main()
 {
     std::cout << "=== Demonstration of groupStats ===\n\n";
-    
+ 
+    // работа с нашим новым объектом
+    std::cout << "\n-1. Array of Fruict_brends \n" << std::endl;
+    Fruict_brands fruicts[] = {{"apple", 1976}, {"banana", 327}, {"apricot", 2007}, {"cherry", 1997}, {"blueberry", 1997}, 
+                    {"avocado", 750}, {"berry", 1939}, {"coconut", 1954}, {"date", 1996}, {"fig", 2012}};
+    size_t fruitsSize = sizeof(fruicts) / sizeof(fruicts[0]);    
+    auto fruitsGroups = groupStats(fruicts, fruitsSize, fruictKeyFunc, fruictValueFunc);
+    for (const auto& group : fruitsGroups) {
+        printGroupInfo(group);
+    }
+
     std::cout << "1. Array of int\n" << std::endl;
     int intArr[] = {12, 23, 34, 45, 56, 67, 78, 89, 91, 102, 113, 124, 15, 26, 37};
     size_t intSize = sizeof(intArr) / sizeof(intArr[0]);
-    auto intGroups = groupStats(intArr, intSize, intKeyFunc, intValueFunc);
+    reIntKeyFunc func = 2; // func вместо intKeyFunc
+    auto intGroups = groupStats(intArr, intSize, func, intValueFunc);
     //    [](int x) { return x % 10; } вместо keyfunc и valuefunc
     //    [](int x) { return x; }      
     for (const auto& group : intGroups) {

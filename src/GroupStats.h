@@ -96,8 +96,8 @@ template <typename ElemType, typename KeyType, typename ValueType>
 void printGroupInfo(const GroupInfo<ElemType, KeyType, ValueType>& info) {
     std::cout << "Key: " << std::setw(5) << info.key
               << " | Count: " << std::setw(3) << info.count
-              << " | Min: " << std::setw(8) << info.minElem
-              << " | Max: " << std::setw(8) << info.maxElem
+              << " | Min: " << std::setw(10) << info.minElem
+              << " | Max: " << std::setw(10) << info.maxElem
               << " | Sum: " << std::setw(10) << info.sum
               << " | Avg: " << std::setw(10) << std::fixed << std::setprecision(2) << info.avg;
     std::cout << std::endl;
